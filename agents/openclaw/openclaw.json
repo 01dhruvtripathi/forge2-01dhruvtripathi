@@ -308,7 +308,16 @@
       "groupPolicy": "open",
       "capabilities": {
         "interactiveReplies": true
-      }
+      },
+      "appToken": "${SLACK_APP_TOKEN}",
+      "botToken": "${SLACK_BOT_TOKEN}",
+      "channels": [
+        "#sprint-main",
+        "#agent-coder",
+        "#human-review",
+        "#deployments",
+        "#qa-alerts"
+      ]
     }
   },
   "wizard": {

@@ -15,7 +15,12 @@ class SlaPolicyController extends Controller
     public function index(Request $request): JsonResponse
     {
         $policies = SlaPolicy::where('organization_id', $request->user()->organization_id)
-            ->orderByRaw("FIELD(priority, 'critical', 'high', 'medium', 'low')")
+            ->orderByRaw("CASE priority 
+                WHEN 'critical' THEN 1 
+                WHEN 'high' THEN 2 
+                WHEN 'medium' THEN 3 
+                WHEN 'low' THEN 4 
+                ELSE 5 END")
             ->get();
 
         return response()->json($policies);
