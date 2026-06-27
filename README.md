@@ -40,5 +40,12 @@ To verify the application functionality and tenancy isolation:
 1. `cd backend`
 2. `php artisan test`
 
+## Tenancy Demo
+To test multi-tenant isolation:
+1. Login as `admin@acme.test` (password: `password`)
+2. Observe 12 tickets belonging to Acme Corp.
+3. Logout and login as `dave@beta.test` (password: `password`)
+4. Observe that only Beta Inc's tickets are visible.
+
 ## Live URL
 N/A - Run locally for demo.
