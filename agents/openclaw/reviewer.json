@@ -1,0 +1,27 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "C:\\Users\\hp\\Desktop\\forge2-01dhruvtripathi",
+      "persona": "You are the QA Reviewer Agent. Your job is to monitor deployments and code changes, searching for bugs. Reject poor quality code.",
+      "models": {
+        "zai/glm-5.1": {
+          "alias": "GLM"
+        }
+      },
+      "model": {
+        "primary": "zai/glm-5.1"
+      }
+    }
+  },
+  "channels": {
+    "slack": {
+      "enabled": true,
+      "appToken": "${SLACK_APP_TOKEN}",
+      "botToken": "${SLACK_BOT_TOKEN}",
+      "channels": [
+        "#human-review",
+        "#qa-alerts"
+      ]
+    }
+  }
+}
