@@ -1,26 +1,418 @@
 {
-  "provider": "eastrouter",
-  "base_url": "https://api.eastrouter.com/v1",
-  "model": "z-ai/glm-5.1",
-  "api_key": "${EASTROUTER_API_KEY}",
-  "slack": {
-    "enabled": true,
-    "bot_token": "${SLACK_BOT_TOKEN}",
-    "app_token": "${SLACK_APP_TOKEN}",
-    "channels": [
-      "#sprint-main",
-      "#agent-coder",
-      "#agent-log",
-      "#ci-cd",
-      "#human-review"
-    ]
+  "agents": {
+    "defaults": {
+      "workspace": "C:\\Users\\hp\\.openclaw\\workspace",
+      "models": {
+        "zai/glm-5.1": {
+          "alias": "GLM"
+        }
+      },
+      "model": {
+        "primary": "zai/glm-5.1"
+      }
+    }
   },
-  "workspace": {
-    "working_dir": "c:\\Users\\hp\\Desktop\\forge2-01dhruvtripathi",
-    "command_execution": true
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "8ba21e70f71e5031468e6551ed96830c8ce7261f1f948bdc"
+    },
+    "port": 18789,
+    "bind": "loopback",
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "controlUi": {
+      "allowInsecureAuth": true
+    },
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record",
+        "contacts.add",
+        "calendar.add",
+        "reminders.add",
+        "sms.send",
+        "sms.search"
+      ]
+    }
   },
-  "skills": [
-    "laravel-guru",
-    "react-master"
-  ]
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "tools": {
+    "profile": "coding"
+  },
+  "plugins": {
+    "entries": {
+      "zai": {
+        "enabled": true
+      },
+      "slack": {
+        "enabled": true
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "zai": {
+        "baseUrl": "https://api.z.ai/api/paas/v4",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "glm-5.2",
+            "name": "GLM-5.2",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 1000000,
+            "maxTokens": 131072
+          },
+          {
+            "id": "glm-5.1",
+            "name": "GLM-5.1",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 1.2,
+              "output": 4,
+              "cacheRead": 0.24,
+              "cacheWrite": 0
+            },
+            "contextWindow": 202800,
+            "maxTokens": 131100
+          },
+          {
+            "id": "glm-5",
+            "name": "GLM-5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 1,
+              "output": 3.2,
+              "cacheRead": 0.2,
+              "cacheWrite": 0
+            },
+            "contextWindow": 202800,
+            "maxTokens": 131100
+          },
+          {
+            "id": "glm-5-turbo",
+            "name": "GLM-5 Turbo",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 1.2,
+              "output": 4,
+              "cacheRead": 0.24,
+              "cacheWrite": 0
+            },
+            "contextWindow": 202800,
+            "maxTokens": 131100
+          },
+          {
+            "id": "glm-5v-turbo",
+            "name": "GLM-5V Turbo",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 1.2,
+              "output": 4,
+              "cacheRead": 0.24,
+              "cacheWrite": 0
+            },
+            "contextWindow": 202800,
+            "maxTokens": 131100
+          },
+          {
+            "id": "glm-4.7",
+            "name": "GLM-4.7",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.6,
+              "output": 2.2,
+              "cacheRead": 0.11,
+              "cacheWrite": 0
+            },
+            "contextWindow": 204800,
+            "maxTokens": 131072
+          },
+          {
+            "id": "glm-4.7-flash",
+            "name": "GLM-4.7 Flash",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.07,
+              "output": 0.4,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 131072
+          },
+          {
+            "id": "glm-4.7-flashx",
+            "name": "GLM-4.7 FlashX",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.06,
+              "output": 0.4,
+              "cacheRead": 0.01,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 128000
+          },
+          {
+            "id": "glm-4.6",
+            "name": "GLM-4.6",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.6,
+              "output": 2.2,
+              "cacheRead": 0.11,
+              "cacheWrite": 0
+            },
+            "contextWindow": 204800,
+            "maxTokens": 131072
+          },
+          {
+            "id": "glm-4.6v",
+            "name": "GLM-4.6V",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0.3,
+              "output": 0.9,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 128000,
+            "maxTokens": 32768
+          },
+          {
+            "id": "glm-4.5",
+            "name": "GLM-4.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.6,
+              "output": 2.2,
+              "cacheRead": 0.11,
+              "cacheWrite": 0
+            },
+            "contextWindow": 131072,
+            "maxTokens": 98304
+          },
+          {
+            "id": "glm-4.5-air",
+            "name": "GLM-4.5 Air",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0.2,
+              "output": 1.1,
+              "cacheRead": 0.03,
+              "cacheWrite": 0
+            },
+            "contextWindow": 131072,
+            "maxTokens": 98304
+          },
+          {
+            "id": "glm-4.5-flash",
+            "name": "GLM-4.5 Flash",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 131072,
+            "maxTokens": 98304
+          },
+          {
+            "id": "glm-4.5v",
+            "name": "GLM-4.5V",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0.6,
+              "output": 1.8,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 64000,
+            "maxTokens": 16384
+          }
+        ]
+      }
+    }
+  },
+  "auth": {
+    "profiles": {
+      "zai:default": {
+        "provider": "zai",
+        "mode": "api_key"
+      }
+    }
+  },
+  "channels": {
+    "slack": {
+      "enabled": true,
+      "groupPolicy": "open",
+      "capabilities": {
+        "interactiveReplies": true
+      }
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-06-27T12:01:41.262Z",
+    "lastRunVersion": "2026.6.10",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.6.10",
+    "lastTouchedAt": "2026-06-27T12:01:41.894Z"
+  },
+  "skills": {
+    "entries": {
+      "1password": {
+        "enabled": false
+      },
+      "blogwatcher": {
+        "enabled": false
+      },
+      "blucli": {
+        "enabled": false
+      },
+      "camsnap": {
+        "enabled": false
+      },
+      "clawhub": {
+        "enabled": false
+      },
+      "coding-agent": {
+        "enabled": false
+      },
+      "discord": {
+        "enabled": false
+      },
+      "eightctl": {
+        "enabled": false
+      },
+      "gemini": {
+        "enabled": false
+      },
+      "gifgrep": {
+        "enabled": false
+      },
+      "gog": {
+        "enabled": false
+      },
+      "goplaces": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "mcporter": {
+        "enabled": false
+      },
+      "nano-pdf": {
+        "enabled": false
+      },
+      "obsidian": {
+        "enabled": false
+      },
+      "openhue": {
+        "enabled": false
+      },
+      "ordercli": {
+        "enabled": false
+      },
+      "sag": {
+        "enabled": false
+      },
+      "session-logs": {
+        "enabled": false
+      },
+      "sherpa-onnx-tts": {
+        "enabled": false
+      },
+      "songsee": {
+        "enabled": false
+      },
+      "sonoscli": {
+        "enabled": false
+      },
+      "spotify-player": {
+        "enabled": false
+      },
+      "summarize": {
+        "enabled": false
+      },
+      "trello": {
+        "enabled": false
+      },
+      "video-frames": {
+        "enabled": false
+      },
+      "voice-call": {
+        "enabled": false
+      },
+      "wacli": {
+        "enabled": false
+      },
+      "xurl": {
+        "enabled": false
+      }
+    }
+  }
 }

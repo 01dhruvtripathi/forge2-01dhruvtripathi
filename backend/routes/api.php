@@ -28,7 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Dashboard metrics
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
+    // Macros
+    Route::apiResource('macros', \App\Http\Controllers\Api\MacroController::class);
+
     // Tickets — all scoped to auth user's organization inside the controller
+    Route::get('/tickets/export-csv', [TicketController::class, 'exportCsv']);
     Route::apiResource('tickets', TicketController::class);
 
     // Comments — nested under tickets

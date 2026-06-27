@@ -1,0 +1,25 @@
+{
+  "channels": {
+    "slack": {
+      "enabled": true,
+      "appToken": "${SLACK_APP_TOKEN}",
+      "botToken": "${SLACK_BOT_TOKEN}",
+      "channels": [
+        "#sprint-main",
+        "#agent-coder",
+        "#human-review"
+      ]
+    }
+  },
+  "skills": {
+    "entries": {
+      "laravel-guru": { "enabled": true },
+      "react-master": { "enabled": true }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "C:\\Users\\hp\\Desktop\\forge2-01dhruvtripathi"
+    }
+  }
+}

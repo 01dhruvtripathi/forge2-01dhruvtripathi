@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Notifications\Notifiable;
 
 class Ticket extends Model
 {
+    use Notifiable;
+
     protected $fillable = [
         'organization_id',
         'requester_id',
@@ -44,6 +47,14 @@ class Ticket extends Model
     public function activityLogs(): HasMany
     {
         return $this->hasMany(ActivityLog::class)->orderByDesc('created_at');
+    }
+
+    /**
+     * Route notifications for the Slack channel.
+     */
+    public function routeNotificationForSlack($notification): ?string
+    {
+        return config('services.slack.notifications.webhook_url') ?? env('SLACK_WEBHOOK_URL');
     }
 
     // ── Scopes ───────────────────────────────────────────────────────────────────

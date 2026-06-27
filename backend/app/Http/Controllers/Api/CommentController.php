@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Ticket;
+use App\Notifications\TicketActivitySlackNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -51,6 +52,8 @@ class CommentController extends Controller
             'body'        => $data['body'],
             'is_internal' => $isInternal,
         ]);
+
+        $ticket->notify(new TicketActivitySlackNotification($ticket, $isInternal ? 'internal note added' : 'replied', $user->name, $data['body']));
 
         return response()->json($comment->load('author:id,name'), 201);
     }

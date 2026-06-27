@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Ticket;
+use App\Notifications\TicketActivitySlackNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,51 @@ class TicketController extends Controller
             ->paginate(50);
 
         return response()->json($tickets);
+    }
+
+    /**
+     * Export filtered tickets to CSV for the authenticated user's organization.
+     */
+    public function exportCsv(Request $request)
+    {
+        $orgId = $request->user()->organization_id;
+
+        $tickets = Ticket::forOrg($orgId)
+            ->withFilters($request->only('status', 'priority', 'assignee_id', 'search'))
+            ->with(['requester:id,name', 'assignee:id,name'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=tickets.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['ID', 'Subject', 'Status', 'Priority', 'Requester', 'Assignee', 'Created At'];
+
+        $callback = function() use($tickets, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($tickets as $ticket) {
+                fputcsv($file, [
+                    $ticket->id,
+                    $ticket->subject,
+                    $ticket->status,
+                    $ticket->priority,
+                    $ticket->requester ? $ticket->requester->name : '',
+                    $ticket->assignee ? $ticket->assignee->name : '',
+                    $ticket->created_at,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -54,6 +100,8 @@ class TicketController extends Controller
             'action'    => 'created',
             'meta'      => ['priority' => $ticket->priority],
         ]);
+
+        $ticket->notify(new TicketActivitySlackNotification($ticket, 'created', $user->name));
 
         return response()->json($ticket->load(['requester:id,name', 'assignee:id,name']), 201);
     }
@@ -97,9 +145,38 @@ class TicketController extends Controller
                 'action'    => 'status_changed',
                 'meta'      => ['from' => $ticket->status, 'to' => $data['status']],
             ]);
+            $ticket->status = $data['status'];
+            $ticket->notify(new TicketActivitySlackNotification($ticket, "status changed to {$data['status']}", $user->name));
         }
 
-        $ticket->update($data);
+        // Log priority change
+        if (isset($data['priority']) && $data['priority'] !== $ticket->priority) {
+            ActivityLog::create([
+                'ticket_id' => $ticket->id,
+                'actor_id'  => $user->id,
+                'action'    => 'priority_changed',
+                'meta'      => ['from' => $ticket->priority, 'to' => $data['priority']],
+            ]);
+            $ticket->priority = $data['priority'];
+            $ticket->notify(new TicketActivitySlackNotification($ticket, "priority changed to {$data['priority']}", $user->name));
+        }
+
+        // Log assignee change
+        if (array_key_exists('assignee_id', $data) && $data['assignee_id'] !== $ticket->assignee_id) {
+            ActivityLog::create([
+                'ticket_id' => $ticket->id,
+                'actor_id'  => $user->id,
+                'action'    => 'assignee_changed',
+                'meta'      => ['from' => $ticket->assignee_id, 'to' => $data['assignee_id']],
+            ]);
+            $ticket->assignee_id = $data['assignee_id'];
+            $ticket->notify(new TicketActivitySlackNotification($ticket, 'assigned', $user->name));
+        }
+
+        if (isset($data['subject'])) $ticket->subject = $data['subject'];
+        if (isset($data['description'])) $ticket->description = $data['description'];
+
+        $ticket->save();
 
         return response()->json($ticket->load(['requester:id,name', 'assignee:id,name']));
     }

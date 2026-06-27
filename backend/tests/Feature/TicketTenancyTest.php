@@ -12,6 +12,12 @@ class TicketTenancyTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        \Illuminate\Support\Facades\Notification::fake();
+    }
+
     private function makeOrg(string $slug): Organization
     {
         return Organization::create(['name' => ucfirst($slug), 'slug' => $slug]);
